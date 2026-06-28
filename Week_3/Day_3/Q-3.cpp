@@ -1,38 +1,31 @@
 class Solution {
 public:
-    bool isPalindrome(ListNode* head) {
+    vector<int> nextGreaterElement(vector<int>& nums1, vector<int>& nums2) {
 
-        vector<int> original;
+        unordered_map<int, int> mp;
+        stack<int> st;
 
-        ListNode* temp = head;
-        while(temp != NULL){
-            original.push_back(temp->val);
-            temp = temp->next;
+        for (int num : nums2) {
+
+            while (!st.empty() && num > st.top()) {
+                mp[st.top()] = num;
+                st.pop();
+            }
+
+            st.push(num);
         }
 
-        // Reverse the list
-        ListNode* prev = NULL;
-        ListNode* curr = head;
-
-        while(curr != NULL){
-            ListNode* nextNode = curr->next;
-            curr->next = prev;
-            prev = curr;
-            curr = nextNode;
+        while (!st.empty()) {
+            mp[st.top()] = -1;
+            st.pop();
         }
 
-        // Compare
-        temp = prev;
-        int i = 0;
+        vector<int> ans;
 
-        while(temp != NULL){
-            if(temp->val != original[i])
-                return false;
-
-            temp = temp->next;
-            i++;
+        for (int num : nums1) {
+            ans.push_back(mp[num]);
         }
 
-        return true;
+        return ans;
     }
 };
